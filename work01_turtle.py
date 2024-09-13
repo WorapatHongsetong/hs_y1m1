@@ -4,9 +4,9 @@ import turtle
 
 # Setting
 turtle.speed(10)
-turtle.width(10)
+turtle.width(25)
 turtle.penup()
-turtle.forward(-370)
+turtle.forward(-400)
 
 # Unit
 turtle.pendown()
@@ -31,7 +31,7 @@ turtle.forward(-100)
 turtle.left(-90)
 
 turtle.penup()
-turtle.forward(20)
+turtle.forward(30)
 #########################
 
 # Unit
@@ -57,10 +57,11 @@ turtle.forward(-100)
 turtle.left(-90)
 
 turtle.penup()
-turtle.forward(20)
+turtle.forward(70)
 #########################
 
 # Unit
+turtle.width(15)
 turtle.pendown()
 turtle.left(90)
 
