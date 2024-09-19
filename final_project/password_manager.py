@@ -41,7 +41,13 @@ def tobase10(num):
 
 
 ### Define seeding function
-# encrypted_character = ("A", "T", "C", "G")
+"""
+encrypted_character = ("A", "T", "C", "G")
+
+Unique Byte
+    100base10
+    200base10
+"""
 def seeding():
     pass
 
@@ -59,3 +65,5 @@ for i, letter in enumerate('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 
 char_mapping['.'] = 62
 char_mapping['@'] = 63
+
+# Char_mapping has 64 character:index pairs
