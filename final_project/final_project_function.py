@@ -3,7 +3,7 @@ import random
 import os
 
 
-# Define function convert base10 to base4
+### Define function convert base10 to base4
 def tobase4(num):
     num = int(num)
     temp_storage = 0
@@ -24,7 +24,7 @@ def tobase4(num):
 
 
 
-# Define function convert base4 to base10
+### Define function convert base4 to base10
 def tobase10(num):
     temp_storage = 0
     converted = 0
@@ -40,21 +40,22 @@ def tobase10(num):
 
 
 
+### Define seeding function
+# encrypted_character = ("A", "T", "C", "G")
+def seeding():
+    pass
+
+
 
 ### Character Mapping
 char_mapping = {}
 
-# Mapping digits 0-9
+
 for i in range(10):
     char_mapping[str(i)] = i
 
-# Mapping letters a-z
 for i, letter in enumerate('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
     char_mapping[letter] = 10 + i
 
-# Mapping special characters '.' and '@'
 char_mapping['.'] = 62
 char_mapping['@'] = 63
-
-
-
