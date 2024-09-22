@@ -3,6 +3,8 @@ import random
 import os
 
 
+
+
 ### Define function convert base10 to base4
 def tobase4(num):
     num = int(num)
@@ -24,6 +26,7 @@ def tobase4(num):
 
 
 
+
 ### Define function convert base4 to base10
 def tobase10(num):
     temp_storage = 0
@@ -40,22 +43,45 @@ def tobase10(num):
 
 
 
-### Define seeding function
-"""
-encrypted_character = ("A", "T", "C", "G")
 
-Unique Byte
-    100base10
-    200base10
-"""
-def seeding():
-    pass
+### Detector byte/Forbidden byte
+
+codon_start = tobase4(65)   # 1001
+codon_stopt = tobase4(73)   # 1021
+codon_userp = tobase4(81)   # 1101
+codon_passw = tobase4(96)   # 1200
+
+forbidden = ["1001", "1021", "1101", "1200"]
+
+
+
+
+### Define filler function which all 4 neighboring numbers are not forbidden.
+def filler_function(num):
+    filler = ""
+    forbidden = ["1001", "1021", "1101", "1200"]
+
+
+    for i in range(num):
+
+
+        while forbidden[0] in filler or forbidden[1] in filler \
+            or forbidden[2] in filler or forbidden[3] in filler:
+
+            filler = filler[:(len(filler) - 2)]
+            filler += str(random.choice([0, 1, 2, 3]))
+            
+
+        filler += str(random.choice([0, 1, 2, 3]))
+
+
+    return filler
+
 
 
 
 ### Character Mapping
 char_mapping = {}
-
 
 for i in range(10):
     char_mapping[str(i)] = i
@@ -67,3 +93,73 @@ char_mapping['.'] = 62
 char_mapping['@'] = 63
 
 # Char_mapping has 64 character:index pairs
+
+
+
+
+###  Patern and Keys
+Patern = (['A', 'T', 'C', 'G'],
+ ['A', 'T', 'G', 'C'],
+ ['A', 'C', 'T', 'G'],
+ ['A', 'C', 'G', 'T'],
+ ['A', 'G', 'T', 'C'],
+ ['A', 'G', 'C', 'T'],
+ ['T', 'A', 'C', 'G'],
+ ['T', 'A', 'G', 'C'],
+ ['T', 'C', 'A', 'G'],
+ ['T', 'C', 'G', 'A'],
+ ['T', 'G', 'A', 'C'],
+ ['T', 'G', 'C', 'A'],
+ ['C', 'A', 'T', 'G'],
+ ['C', 'A', 'G', 'T'],
+ ['C', 'T', 'A', 'G'],
+ ['C', 'T', 'G', 'A'],
+ ['C', 'G', 'A', 'T'],
+ ['C', 'G', 'T', 'A'],
+ ['G', 'A', 'T', 'C'],
+ ['G', 'A', 'C', 'T'],
+ ['G', 'T', 'A', 'C'],
+ ['G', 'T', 'C', 'A'],
+ ['G', 'C', 'A', 'T'],
+ ['G', 'C', 'T', 'A'])
+
+Key = ('ATCCCAGGGGGG',
+ 'ATGGGACCCCCC',
+ 'ACTCCCAGGGGG',
+ 'ACTGGGACCCCCC',
+ 'AGTCCCAGGGGG',
+ 'AGTGGGACCCCCC',
+ 'TACCCCAGGGGG',
+ 'TAGGGACCCCCC',
+ 'TCCCCAAGGGGG',
+ 'TCCGGGACCCCCC',
+ 'TGGGGACCCCCC',
+ 'TGCCCACCCGGGG',
+ 'CATCCCAGGGGG',
+ 'CATGGGACCCCCC',
+ 'CTACCCAGGGGG',
+ 'CTGGGACCCCCC',
+ 'CGACCCAGGGGG',
+ 'CGTGGGACCCCCC',
+ 'GACCCCAGGGGG',
+ 'GATGGGACCCCCC',
+ 'GCACCCAGGGGG',
+ 'GCTGGGACCCCCC',
+ 'GTACCCAGGGGG',
+ 'GTGGGACCCCCC')
+
+
+
+
+### Repeator Checker
+
+# not_unique = False
+
+# for i in range(len(Key)):
+#     for j in range(len(Key)):
+#         if Key[i] == Key[j] and i == j:
+#             not_unique = False
+#         elif Key[i] == Key[j]:
+#             not_unique = True
+
+# print(not_unique)
