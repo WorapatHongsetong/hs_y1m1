@@ -17,3 +17,5 @@ dict = {"ass":1, "hole":2}
 print(dict["ass"])
 
 print(dict[:1])
+
+#
