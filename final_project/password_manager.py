@@ -120,7 +120,7 @@ def decoder(string):
     # 01234567########4321    
 
     for i in range(max_byte):
-        converted += char_mapping[tobase10(string[4i:4i+4])]
+        pass
 
 
 
