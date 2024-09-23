@@ -97,8 +97,8 @@ char_mapping['@'] = 63
 
 
 
+# Define encoder function from characters to sequence of base4 numbers.
 def encoder(string):
-    string = str(string)
     converted = ""
     max_byte = len(string)
 
@@ -112,12 +112,15 @@ def encoder(string):
 
 
 
+# Define decoder function from sequence of base 4 numbers to characters.
 def decoder(string):
     string = str(string)
     converted = ""
-    
-    
+    max_byte = len(string) // 4
+    # 01234567########4321    
 
+    for i in range(max_byte):
+        converted += char_mapping[tobase10(string[4i:4i+4])]
 
 
 
@@ -173,8 +176,21 @@ Key = ('ATCCCAGGGGGG',
  'GTACCCAGGGGG',
  'GTGGGACCCCCC')
 
+
+
+
+### Testing
 user = "English"
+
 password = "Password12345678"
+
+
+user_encoded = codon_start + codon_userp + encoder(user) + codon_stopt
+password_encoded = codon_start + codon_passw + encoder(password) + codon_stopt
+
 
 print(encoder(user))
 print(encoder(password))
+
+print(user_encoded)
+print(password_encoded)
