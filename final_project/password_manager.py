@@ -51,7 +51,7 @@ codon_stopt = tobase4(73)   # 1021
 codon_userp = tobase4(81)   # 1101
 codon_passw = tobase4(96)   # 1200
 
-forbidden = ["1001", "1021", "1101", "1200"]
+forbidden = ("1001", "1021", "1101", "1200")
 
 
 
@@ -93,6 +93,31 @@ char_mapping['.'] = 62
 char_mapping['@'] = 63
 
 # Char_mapping has 64 character:index pairs
+
+
+
+
+def encoder(string):
+    string = str(string)
+    converted = ""
+    max_byte = len(string)
+
+
+    for i in range(max_byte):
+        converted += tobase4(char_mapping[string[i]])
+
+
+    return converted
+
+
+
+
+def decoder(string):
+    string = str(string)
+    converted = ""
+    
+    
+
 
 
 
@@ -148,18 +173,8 @@ Key = ('ATCCCAGGGGGG',
  'GTACCCAGGGGG',
  'GTGGGACCCCCC')
 
+user = "English"
+password = "Password12345678"
 
-
-
-### Repeator Checker
-
-# not_unique = False
-
-# for i in range(len(Key)):
-#     for j in range(len(Key)):
-#         if Key[i] == Key[j] and i == j:
-#             not_unique = False
-#         elif Key[i] == Key[j]:
-#             not_unique = True
-
-# print(not_unique)
+print(encoder(user))
+print(encoder(password))
