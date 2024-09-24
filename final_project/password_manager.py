@@ -6,20 +6,25 @@ import os
 
 
 ### Define function convert base10 to base4
-def tobase4(num):
-    num = int(num)
-    temp_storage = 0
+def tobase4(number):
+    number = int(number)
+    remainder = 0
     converted = ""
 
 
-    while True:
-        temp_storage = num % 4
-        num = num // 4
-        converted = str(temp_storage) + converted
-
-        if num < 4:
-            converted = str(num) + converted
+    while True :
+        if number == 0 and len(converted) == 4:
             break
+        
+
+        remainder = number % 4
+        number //= 4
+
+        converted = str(remainder) + converted
+
+
+        if number == 0 and len(converted) < 4:
+            converted = "0" + converted
     
 
     return converted
@@ -107,7 +112,7 @@ def encoder(string):
         converted += tobase4(char_mapping[string[i]])
 
 
-    return converted
+    pass
 
 
 
@@ -190,7 +195,9 @@ password_encoded = codon_start + codon_passw + encoder(password) + codon_stopt
 
 
 print(encoder(user))
+print(len(encoder(user)))
 print(encoder(password))
+print(len(encoder(password)))
 
 print(user_encoded)
 print(password_encoded)
