@@ -5,86 +5,6 @@ import os
 
 
 
-def add_profile() -> tuple[str, str]:
-    """
-    When call this function will clear terminal, then recive username and password (both are string).
-    Then return tuple of username and password (both are string).
-    """
-
-
-    os.system('cls' if os.name == 'nt' else 'clear')
-
-    print("All inputs must be upper case or lower case latin characters, base10 numbers, \".\" or \"@\"")
-    print()
-
-    username = input("  Username: ")
-    password = input("  Password: ")
-
-    return username, password
-
-
-
-
-"""
-    Begins of Encoder & Decoder Logic
-"""
-
-
-
-
-def tobase4(num: int) -> str:
-    """
-    Convert base 10 number to 4 digit base 4 number.
-    """
-
-    remainder = 0
-    converted = ""
-
-
-    while True :
-        if num == 0 and len(converted) == 4:
-            break
-
-
-        remainder = num % 4
-        num //= 4
-
-        converted = str(remainder) + converted
-
-
-        if num == 0 and len(converted) < 4:
-            converted = "0" + converted
-    
-
-    return converted
-
-
-
-
-def tobase10(num: float) -> str:
-    """
-    Convert 4 digit base 4 number to base 10 number.
-    """
-
-    temp_storage = 0
-    converted = 0
-    max_digit = len(num)
-
-
-    for digit, value in enumerate(num):
-        temp_storage = int(value) * (4 ** (max_digit - digit - 1))
-        converted += temp_storage
-
-
-    return converted
-
-
-
-
-# PEP8 meter.
-#         1         2         3         4         5         6         7         8         9        10
-#1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
-
 ### Character Mapping
 char_mapping = \
 {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, 'a': 10, \
@@ -108,90 +28,17 @@ reverse_char_mapping = \
 
 # Reverse_char_maping has 64 character:index pairs
 
-"""
-PS. 
-I know that it not in PEP8 format, 
-but ending with number that divisable by 10 is so sastisfy.
-Please mercy.
-"""
-
-
-
-### Define decoder function
-
-def encoder(string: str) -> str:
-    """
-    This function will map each character (using char_mapping) to number and change to 1byte (4 characters in base4).
-    """
-    
-    converted = ""
-    max_byte = len(string)
-
-
-    for i in range(max_byte):
-        converted += tobase4(char_mapping[string[i]])
-
-
-    return converted
-
-
-
-
-### Define decoder function
-
-def decoder(string: str) -> str:
-    """
-    This function will change 1 byte code (4 characters in base4), and map to reverse_char_mapping, to original character.
-    """
-
-    converted = ""
-    max_byte = len(string)
-
-
-    for i in range(0,max_byte,4):
-        section = string[i:i+4]
-        translation = reverse_char_mapping[int(tobase10(section))]
-        converted += translation
-
-
-    return converted
-    
-
-
-
-### Define filler function which all 4 neighboring numbers are not forbidden.
-
-def filler_function(num: int) -> str:
-    filler = ""
-    forbidden = ["1001", "1021", "1101", "1200"]
-
-
-    for i in range(num):
-
-
-        while forbidden[0] in filler or forbidden[1] in filler \
-            or forbidden[2] in filler or forbidden[3] in filler:
-
-            filler = filler[:(len(filler) - 2)]
-            filler += str(random.choice([0, 1, 2, 3]))
-            
-
-        filler += str(random.choice([0, 1, 2, 3]))
-
-
-    return filler
-
 
 
 
 ### Detector byte/Forbidden byte
 
-codon_start = tobase4(65)   # 1001
-codon_stopt = tobase4(73)   # 1021
-codon_userp = tobase4(81)   # 1101
-codon_passw = tobase4(96)   # 1200
+Codon_start = "1001"            # 65
+Codon_stopt = "1021"            # 73
+Codon_userp = "1101"            # 81
+Codon_passw = "1200"            # 96
 
-forbidden = ("1001", "1021", "1101", "1200")
+Forbidden = ("1001", "1021", "1101", "1200")
 
 
 
@@ -253,7 +100,205 @@ Key = ('ATCCCAGGGGGG',
 
 
 
-### Define 
+def tobase4(num: int) -> str:
+    """
+    Convert base 10 number to 4 digit base 4 number.
+    """
 
-print("lol")
-input()
+    remainder = 0
+    converted = ""
+
+
+    while True :
+        if num == 0 and len(converted) == 4:
+            break
+
+
+        remainder = num % 4
+        num //= 4
+
+        converted = str(remainder) + converted
+
+
+        if num == 0 and len(converted) < 4:
+            converted = "0" + converted
+    
+
+    return converted
+
+
+
+
+def tobase10(num: float) -> str:
+    """
+    Convert 4 digit base 4 number to base 10 number.
+    """
+
+    temp_storage = 0
+    converted = 0
+    max_digit = len(num)
+
+
+    for digit, value in enumerate(num):
+        temp_storage = int(value) * (4 ** (max_digit - digit - 1))
+        converted += temp_storage
+
+
+    return converted
+
+
+
+
+def encoder(string: str) -> str:
+    """
+    This function will map each character (using char_mapping) to number and change to 1byte (4 characters in base4).
+    """
+    
+    converted = ""
+    max_byte = len(string)
+
+
+    for i in range(max_byte):
+        converted += tobase4(char_mapping[string[i]])
+
+
+    return converted
+
+
+
+
+def decoder(string: str) -> str:
+    """
+    This function will change 1 byte code (4 characters in base4), and map to reverse_char_mapping, to original character.
+    """
+
+    converted = ""
+    max_byte = len(string)
+
+
+    for i in range(0,max_byte,4):
+        section = string[i:i+4]
+        translation = reverse_char_mapping[int(tobase10(section))]
+        converted += translation
+
+
+    return converted
+    
+
+
+
+def filler_function(num: int) -> str:
+    """
+    When call this function, it will create sequence of number in base4 (string) that have lenght of input num (int).
+    Which random sequence of number will not contains forbidden section ("1001", "1021", "1101", "1200").
+    Then return that sequnce (string).
+    """
+
+
+    filler = ""
+    forbidden = ["1001", "1021", "1101", "1200"]
+
+
+    for i in range(num):
+
+
+        while forbidden[0] in filler or forbidden[1] in filler \
+            or forbidden[2] in filler or forbidden[3] in filler:
+
+            filler = filler[:(len(filler) - 2)]
+            filler += str(random.choice([0, 1, 2, 3]))
+            
+
+        filler += str(random.choice([0, 1, 2, 3]))
+
+
+    return filler
+
+
+
+
+def encrypter(username: str, password: str) -> str:
+    """
+    Arguments
+        username (str) :    need to be in base4 by encoder()
+        password (str) :    need to be in base4 by encoder()
+
+    When call function
+        1   Complete username and password with detector bytes and randomly select order between them.
+        2   Randomly fill number in base4 in three sections: first, middle, last (str) which sum of their lenght and lenght from (1) are 64, then merge them to one string as encrypted.
+        3   Return encrypted.
+
+    Return
+        encrypted (str)
+    """
+
+
+    # setup user info
+    complete_username = Codon_start + Codon_userp + encoder(username) + Codon_stopt
+    complete_password = Codon_start + Codon_passw + encoder(username) + Codon_stopt
+
+    lenght_of_string = len(complete_username) + len(complete_password)
+    lenght_remaining = 128 - lenght_of_string
+
+
+    # random order unit
+    user_info_list = [complete_username, complete_password]
+    random_temp = user_info_list.pop(random.choice([0, 1]))
+    user_info_list.append(random_temp)
+
+
+    # filler unit
+    filler_first = ""
+    filler_mid = ""
+    filler_last = ""
+
+    parameter_mid = int(random.uniform(0, lenght_remaining))
+    lenght_remaining -= parameter_mid
+    parameter_first = int(random.uniform(0, lenght_remaining))
+    lenght_remaining -= parameter_first
+    parameter_last = lenght_remaining
+
+    filler_first = filler_function(parameter_first)
+    filler_mid = filler_function(parameter_mid)
+    filler_last = filler_function(parameter_last)
+
+
+    # merge filler unit with user info as encrypted
+    encrypted = filler_first + user_info_list[0] + filler_mid + user_info_list[1] + filler_last
+
+
+    return encrypted
+
+
+
+
+def decrypter(encrypted: str) -> tuple[str, str]:
+    pass
+    
+
+
+
+
+def add_profile() -> tuple[str, str, str]:
+    """
+    When call this function will clear terminal, then recive username, password and usernote (those are string).
+    Then return tuple of username, password and usernote (those are string).
+    """
+
+
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+    print("All inputs must be upper case or lower case latin characters, base10 numbers, \".\" or \"@\"")
+    print()
+
+    username = input("  Username: ")
+    password = input("  Password: ")
+    usernote = input("  UserNote: ")
+
+
+    return username, password, usernote
+
+
+
+print(encrypter("english123456", "Password123456"))
+print(len(encrypter("english123456", "Password123456")))
