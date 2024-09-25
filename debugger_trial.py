@@ -5,28 +5,54 @@ import os
 
 
 
-def tobase4(number):
+def add_profile() -> tuple[str, str]:
+    """
+    When call this function will clear terminal, then recive username and password (both are string).
+    Then return tuple of username and password (both are string).
+    """
+
+
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+    print("All inputs must be upper case or lower case latin characters, base10 numbers, \".\" or \"@\"")
+    print()
+
+    username = input("  Username: ")
+    password = input("  Password: ")
+
+    return username, password
+
+
+
+
+"""
+    Begins of Encoder & Decoder Logic
+"""
+
+
+
+
+def tobase4(num: int) -> str:
     """
     Convert base 10 number to 4 digit base 4 number.
     """
 
-    number = int(number)
     remainder = 0
     converted = ""
 
 
     while True :
-        if number == 0 and len(converted) == 4:
+        if num == 0 and len(converted) == 4:
             break
 
 
-        remainder = number % 4
-        number //= 4
+        remainder = num % 4
+        num //= 4
 
         converted = str(remainder) + converted
 
 
-        if number == 0 and len(converted) < 4:
+        if num == 0 and len(converted) < 4:
             converted = "0" + converted
     
 
@@ -35,7 +61,7 @@ def tobase4(number):
 
 
 
-def tobase10(num):
+def tobase10(num: float) -> str:
     """
     Convert 4 digit base 4 number to base 10 number.
     """
@@ -93,7 +119,7 @@ Please mercy.
 
 ### Define decoder function
 
-def encoder(string):
+def encoder(string: str) -> str:
     """
     This function will map each character (using char_mapping) to number and change to 1byte (4 characters in base4).
     """
@@ -113,7 +139,7 @@ def encoder(string):
 
 ### Define decoder function
 
-def decoder(string):
+def decoder(string: str) -> str:
     """
     This function will change 1 byte code (4 characters in base4), and map to reverse_char_mapping, to original character.
     """
@@ -135,7 +161,7 @@ def decoder(string):
 
 ### Define filler function which all 4 neighboring numbers are not forbidden.
 
-def filler_function(num):
+def filler_function(num: int) -> str:
     filler = ""
     forbidden = ["1001", "1021", "1101", "1200"]
 
@@ -227,4 +253,7 @@ Key = ('ATCCCAGGGGGG',
 
 
 
-### 
+### Define 
+
+print("lol")
+input()
