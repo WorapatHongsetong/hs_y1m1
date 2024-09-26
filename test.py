@@ -428,27 +428,194 @@ def decrypter_translation(encrypted: str) -> str:
 
 
 
-def add_profile() -> tuple[str, str]:
+
+def add_profile() -> tuple[str, str, str]:
     """
+    Require user inputs username, password and usernote.
     
+    Block:
+        Blank inputs        (Only username, password)
+        Surpass limit       (Only username, password)
+        Invalid characters  (Only username, password)
+
+    Return:
+        username (str) - username
+        password (str) - password
+        usernote (str) - usernote
     """
 
-    pass
+    is_blank = False
+    is_surpass = False
+    is_invalid = False
 
-username = "vetit"
-password = "2"
+    while True:
 
-encrypted = encrypter(username, password)
-encrypted_traslated = encrypter_translation(encrypted)
-decrypted_traslated = decrypter_translation(encrypted_traslated)
-decrypted = decrypter(decrypted_traslated)
+        os.system('cls' if os.name == 'nt' else 'clear')
 
-print(encrypted)
-print("Char length: " + str(len(encrypted)))
-print(encrypted_traslated)
-print("Char length: " + str(len(encrypted_traslated)))
-print(decrypted_traslated)
-print("Char length: " + str(len(decrypted_traslated)))
+        print("""
+Add new profile
 
-print()
-print(decrypted)
+Only Upper/Lowercase, Base10 Integer, "." and "@" for Username and Password.
+Maximum character length is 16 for Username and Password.
+""")
+        username = input("Username : ")
+        password = input("Password : ")
+        usernote = input("Usernote : ")
+        input("Enter to continue.")
+        print()
+
+        if len(username) == 0 or len(password) == 0:
+            is_blank = True
+        
+        if len(username) > 16 or len(password) > 16:
+            is_surpass = True
+
+        for character in username:
+            if character not in char_valid:
+                is_invalid = True
+                break
+
+        for character in password:
+            if character not in char_valid:
+                is_invalid = True
+                break
+
+
+        if not(is_blank or is_surpass or is_invalid):
+            return username, password, usernote
+        
+        else:
+            print("-------------------------------------")
+            if is_blank:
+                print("Error: Blank")
+            if is_surpass:
+                print("Error: Surpass 16 characters")
+            if is_invalid:
+                print("Error: Invalid character(s)")
+            
+            print()
+
+            input("Enter to continue.")
+
+
+
+def del_profile(max_index: int):
+    """
+    Recive user delete index, confirm.
+
+    Arg:
+        max_index (int) - maximum index.
+    
+    Return:
+        selected_index (int) - selected index to delete.
+    or  None - when error occur.
+
+    """
+
+    print("Delete Profile")
+
+    selected_index = input("Select index: ")
+    input("Enter to continue.")
+    print()
+
+    if int(selected_index) in list(range(0, max_index)):
+        return int(selected_index)
+
+    else:
+        return selected_index
+        print("Error: Index out of range.")
+        input("Enter to continue.")
+        return None
+
+
+
+all_profile = []
+profile = []
+
+while True:
+
+
+
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+    print(f"All Profiles ({len(all_profile)})")
+
+    for index in range(len(all_profile)):
+        print(f"""
+Profile #{index}:
+
+    {all_profile[index][0]}
+
+
+Note:
+    {all_profile[index][1]}
+
+
+""")
+    
+
+
+
+    print("""
+Console Command:
+          (0)   Add
+          (1)   Del
+          (2)   Read Encrypted Code
+
+""")
+    console = input("Console : ")
+
+
+
+
+    if console == "0":
+        username, password, usernote = add_profile()
+
+        profile = [encrypter_translation(encrypter(username, password)), usernote]
+        all_profile.append(profile)
+
+
+
+
+    elif console == "1":
+        index = del_profile(len(all_profile))
+
+        if index != None:
+            if index == 0 and len(all_profile) == 1:
+                all_profile = []
+            else:
+                all_profile.remove(all_profile[index])
+
+
+
+
+    elif console == "2":
+        pass
+
+
+    else:
+        print()
+        print("Error: Invalid Command.")
+        ("Enter to continue.")
+        
+        continue
+
+
+
+# username = "vetit"
+# password = "2"
+
+# encrypted = encrypter(username, password)
+# encrypted_traslated = encrypter_translation(encrypted)
+# decrypted_traslated = decrypter_translation(encrypted_traslated)
+# decrypted = decrypter(decrypted_traslated)
+
+# print(encrypted)
+# print("Char length: " + str(len(encrypted)))
+# print(encrypted_traslated)
+# print("Char length: " + str(len(encrypted_traslated)))
+# print(decrypted_traslated)
+# print("Char length: " + str(len(decrypted_traslated)))
+
+# print()
+# print(decrypted)
