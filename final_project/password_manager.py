@@ -624,6 +624,13 @@ def reg_profile() -> tuple[str, str]:
 
 
 
+
+
+
+
+
+
+
 all_profile = []
 profile = []
 
@@ -743,7 +750,17 @@ Password:   {password}
 
 
 
+"""
+Type of Errors
+    Invalid command
+    No Profile
+    Index out of range
+    Invalid format
+    Blank
+    Surpass maximum characters
+    Invalid Character
 
+"""
 
 
 
