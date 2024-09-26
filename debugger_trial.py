@@ -28,7 +28,11 @@ reverse_char_mapping = \
 
 # Reverse_char_maping has 64 character:index pairs
 
-
+char_valid = \
+('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',\
+ 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',\
+ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',\
+ 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '.', '@')
 
 
 ### Detector byte/Forbidden byte
@@ -217,57 +221,28 @@ def filler_function(num: int) -> str:
 
 
 
-def encrypter(username: str, password: str) -> str:
+def completeter(username1: str, password1: str) -> tuple[str, str]:
     """
-    Arguments
-        username (str) :    need to be in base4 by encoder()
-        password (str) :    need to be in base4 by encoder()
-
-    When call function
-        1   Complete username and password with detector bytes and randomly select order between them.
-        2   Randomly fill number in base4 in three sections: first, middle, last (str) which sum of their lenght and lenght from (1) are 64, then merge them to one string as encrypted.
-        3   Return encrypted.
-
-    Return
-        encrypted (str)
+    Complete encoded username and password with start, stop and type codon.
     """
 
+    username2 = Codon_start + Codon_userp + username1 + Codon_stopt
+    password2 = Codon_start + Codon_passw + password1 + Codon_stopt
 
-    # setup user info
-    complete_username = Codon_start + Codon_userp + encoder(username) + Codon_stopt
-    complete_password = Codon_start + Codon_passw + encoder(username) + Codon_stopt
-
-    lenght_of_string = len(complete_username) + len(complete_password)
-    lenght_remaining = 128 - lenght_of_string
+    return username1, password2
 
 
-    # random order unit
-    user_info_list = [complete_username, complete_password]
-    random_temp = user_info_list.pop(random.choice([0, 1]))
-    user_info_list.append(random_temp)
 
 
-    # filler unit
-    filler_first = ""
-    filler_mid = ""
-    filler_last = ""
-
-    parameter_mid = int(random.uniform(0, lenght_remaining))
-    lenght_remaining -= parameter_mid
-    parameter_first = int(random.uniform(0, lenght_remaining))
-    lenght_remaining -= parameter_first
-    parameter_last = lenght_remaining
-
-    filler_first = filler_function(parameter_first)
-    filler_mid = filler_function(parameter_mid)
-    filler_last = filler_function(parameter_last)
-
-
-    # merge filler unit with user info as encrypted
-    encrypted = filler_first + user_info_list[0] + filler_mid + user_info_list[1] + filler_last
-
-
-    return encrypted
+def encrypter(username2: str, password2: str) -> str:
+    """
+    Randomly combine username and password into string, add filler to fill the string until string's lenght is 256(64 byte).
+    """
+    #           0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+    position = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    
+    
 
 
 
@@ -279,26 +254,85 @@ def decrypter(encrypted: str) -> tuple[str, str]:
 
 
 
-def add_profile() -> tuple[str, str, str]:
+
+
+
+
+
+
+
+
+### Interfaces and User inputs
+
+def add_profile() -> tuple[str, str, str, bool]:
     """
     When call this function will clear terminal, then recive username, password and usernote (those are string).
     Then return tuple of username, password and usernote (those are string).
     """
 
+    reject = False
 
     os.system('cls' if os.name == 'nt' else 'clear')
 
     print("All inputs must be upper case or lower case latin characters, base10 numbers, \".\" or \"@\"")
     print()
 
-    username = input("  Username: ")
-    password = input("  Password: ")
-    usernote = input("  UserNote: ")
+    username = input("  Username (Maximum 16 Characters): ")
+    password = input("  Password (Maximum 16 Characters): ")
+    usernote = input("  UserNote : ")
+    print()
+    input("-Enter to continue-")
 
 
-    return username, password, usernote
+    # Empty String Error
+    if len(username) == 0 or len(password) == 0:
+        reject = True
+        os.system('cls' if os.name == 'nt' else 'clear')
+
+        print("Error : Empty String")
+        print()
+        input("-Enter to continue-")
+
+    # 
+    if len(username) > 16 or len(password) > 16:
+        reject = True
+        os.system('cls' if os.name == 'nt' else 'clear')
+
+        print("Error : Lenght")
+        print()
+        input("-Enter to continue-")
+
+
+    for character in username:
+
+        if character not in char_valid:
+            reject = True
+        os.system('cls' if os.name == 'nt' else 'clear')
+
+        print("Error : Invalid Character(s)")
+        print()
+        input("-Enter to continue-")
+    
+
+    for character in password:
+
+        if character not in char_valid:
+            reject = True
+        os.system('cls' if os.name == 'nt' else 'clear')
+
+        print("Error : Invalid Character(s)")
+        print()
+        input("-Enter to continue-")
 
 
 
-print(encrypter("english123456", "Password123456"))
-print(len(encrypter("english123456", "Password123456")))
+    return username, password, usernote, reject
+
+
+
+# print(encrypter("english123456", "Password123456"))
+# print(len(encrypter("english123456", "Password123456")))
+# encrypted = encrypter("english123456", "Password123456")
+# print("1001" in encrypted, "1021" in encrypted, "1101" in encrypted, "1200" in encrypted)
+
+add_profile()

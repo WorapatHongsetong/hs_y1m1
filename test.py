@@ -1,3 +1,5 @@
-import random
+position = []
+for i in range(64):
+    position.append(0)
 
-print(random.uniform(12,20))
+print(position)
