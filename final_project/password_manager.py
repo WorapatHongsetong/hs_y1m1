@@ -529,7 +529,12 @@ def del_profile(max_index: int):
     input("Enter to continue.")
     print()
 
-    if int(selected_index) in list(range(0, max_index)):
+    if selected_index == "":
+        print("Error: Blank.")
+        input("Enter to continue.")
+        return None
+
+    elif int(selected_index) in list(range(0, max_index)):
         return int(selected_index)
 
     else:
@@ -559,7 +564,12 @@ def red_profile(max_index: int):
     input("Enter to continue.")
     print()
 
-    if int(selected_index) in list(range(0, max_index)):
+    if selected_index == "":
+        print("Error: Blank.")
+        input("Enter to continue.")
+        return None
+
+    elif int(selected_index) in list(range(0, max_index)):
         return int(selected_index)
 
     else:
@@ -593,7 +603,14 @@ def reg_profile() -> tuple[str, str]:
 
     username, password = decrypter(decrypter_translation(unregister_code))
 
-    if username == None or password == None:
+    if unregister_code == "":
+        print("-------------------------------------")
+        print("Error: Blank")
+        print()
+        input("Enter to continue.")
+        return None, None
+    
+    elif username == None or password == None:
         print("-------------------------------------")
         print("Error: Invalid format")
         print()
