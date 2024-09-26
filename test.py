@@ -344,19 +344,23 @@ def decrypter(encrypted: str) -> tuple[str, str]:
         username (str) - username
         password (str) - password
     """
+
+    if encrypted == None:
+        return None, None
+
     # Find all indices of start codons
     start_username_idx = encrypted.find(Codon_start + Codon_userp)
     start_password_idx = encrypted.find(Codon_start + Codon_passw)
     
     if start_username_idx == -1 or start_password_idx == -1:
-        raise ValueError("Codons for username or password not found in encrypted string.")
+        return None, None
     
     # Find stop codon locations
     stop_username_idx = encrypted.find(Codon_stopt, start_username_idx)
     stop_password_idx = encrypted.find(Codon_stopt, start_password_idx)
     
     if stop_username_idx == -1 or stop_password_idx == -1:
-        raise ValueError("Stop codons not found in encrypted string.")
+        return None, None
     
     # Extract the username and password
     username = decoder(encrypted[start_username_idx + len(Codon_start + Codon_userp):stop_username_idx])
@@ -408,8 +412,14 @@ def decrypter_translation(encrypted: str) -> str:
         translated (str) - original base4 string.
 
     """
+    if encrypted == None:
+        return None
 
     key_string = encrypted[:12]
+
+    if key_string not in Key:
+        return None
+
     seed_key = Key.index(key_string)
 
     translated = encrypted[12:]
@@ -444,11 +454,13 @@ def add_profile() -> tuple[str, str, str]:
         usernote (str) - usernote
     """
 
-    is_blank = False
-    is_surpass = False
-    is_invalid = False
 
     while True:
+
+        is_blank = False
+        is_surpass = False
+        is_invalid = False
+
 
         os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -481,7 +493,7 @@ Maximum character length is 16 for Username and Password.
                 break
 
 
-        if not(is_blank or is_surpass or is_invalid):
+        if not (is_blank or is_surpass or is_invalid):
             return username, password, usernote
         
         else:
@@ -501,7 +513,7 @@ Maximum character length is 16 for Username and Password.
 
 def del_profile(max_index: int):
     """
-    Recive user delete index, confirm.
+    Recive user delete index.
 
     Arg:
         max_index (int) - maximum index.
@@ -522,15 +534,84 @@ def del_profile(max_index: int):
         return int(selected_index)
 
     else:
-        return selected_index
+        print("Error: Index out of range.")
+        input("Enter to continue.")
+        return None
+    
+
+
+
+def red_profile(max_index: int):
+    """
+    Recive user read index.
+
+    Arg:
+        max_index (int) - maximum index.
+    
+    Return:
+        selected_index (int) - selected index to read.
+    or  None - when error occur.
+
+    """
+
+    print("Read Encrypted Code")
+
+    selected_index = input("Select index: ")
+    input("Enter to continue.")
+    print()
+
+    if int(selected_index) in list(range(0, max_index)):
+        return int(selected_index)
+
+    else:
         print("Error: Index out of range.")
         input("Enter to continue.")
         return None
 
 
 
+def reg_profile() -> tuple[str, str]:
+    """
+    Recive user encrypted code and register.
+
+    Return:
+        unregister_code (str) - unregister code.
+        usernote (str) - usernote.
+    or  None - when error occur.
+
+    """
+
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+    print("""Register New Code
+
+""")
+
+    unregister_code = input("Unregistered Code : ")
+    usernote = input("Usernote          : ")
+    input("Enter to continue")
+    print()
+
+    username, password = decrypter(decrypter_translation(unregister_code))
+
+    if username == None or password == None:
+        print("-------------------------------------")
+        print("Error: Invalid format")
+        print()
+        input("Enter to continue.")
+        return None, None
+
+    else:
+        return unregister_code, usernote
+
+
+
+
+
 all_profile = []
 profile = []
+
+
 
 while True:
 
@@ -543,26 +624,26 @@ while True:
     for index in range(len(all_profile)):
         print(f"""
 Profile #{index}:
-
     {all_profile[index][0]}
-
 
 Note:
     {all_profile[index][1]}
 
-
 """)
     
 
+    print("""
 
+""")
 
     print("""
 Console Command:
-          (0)   Add
-          (1)   Del
+          (0)   Add Profile
+          (1)   Del Profile
           (2)   Read Encrypted Code
-
+          (3)   Register Encrypted Code
 """)
+    
     console = input("Console : ")
 
 
@@ -578,6 +659,9 @@ Console Command:
 
 
     elif console == "1":
+        print("""
+
+""")
         index = del_profile(len(all_profile))
 
         if index != None:
@@ -590,32 +674,51 @@ Console Command:
 
 
     elif console == "2":
-        pass
+        print("""
+
+""")
+        if len(all_profile) == 0:
+            print()
+            print("Error: No profile")
+            input("Enter to continue.")
+            continue
+        
+        index = red_profile(len(all_profile))
+
+        if index != None:
+            username, password = decrypter(decrypter_translation(all_profile[index][0]))
+
+
+            os.system('cls' if os.name == 'nt' else 'clear')
+
+            print(f"Read Profile #{index}")
+            print(f"""
+Profile #{index}:
+    {all_profile[index][0]}
+
+Note:
+    {all_profile[index][1]}
+
+Username:   {username}
+Password:   {password}
+
+""")
+            input("Enter to continue.")
+        
+
+    
+
+    elif console == "3":
+        unregister_code, usernote = reg_profile()
+
+        if not (unregister_code == None or usernote == None):
+            profile = [unregister_code, usernote]
+            all_profile.append(profile)
 
 
     else:
         print()
         print("Error: Invalid Command.")
-        ("Enter to continue.")
+        input("Enter to continue.")
         
-        continue
 
-
-
-# username = "vetit"
-# password = "2"
-
-# encrypted = encrypter(username, password)
-# encrypted_traslated = encrypter_translation(encrypted)
-# decrypted_traslated = decrypter_translation(encrypted_traslated)
-# decrypted = decrypter(decrypted_traslated)
-
-# print(encrypted)
-# print("Char length: " + str(len(encrypted)))
-# print(encrypted_traslated)
-# print("Char length: " + str(len(encrypted_traslated)))
-# print(decrypted_traslated)
-# print("Char length: " + str(len(decrypted_traslated)))
-
-# print()
-# print(decrypted)
