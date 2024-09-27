@@ -166,7 +166,7 @@ def tobase10(num: str) -> int:
 
 
 
-# C
+# Convert string of character to base4 sequence
 def encoder(string: str) -> str:
     """
     Convert sequence of character to base4 string.
