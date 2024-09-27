@@ -166,7 +166,7 @@ def tobase10(num: str) -> int:
 
 
 
-
+# C
 def encoder(string: str) -> str:
     """
     Convert sequence of character to base4 string.
@@ -190,7 +190,7 @@ def encoder(string: str) -> str:
 
 
 
-
+# Convert section of base4 to base 10 then map to original character
 def decoder(string: str) -> str:
     """
     Inverse of encoder()
@@ -217,7 +217,7 @@ def decoder(string: str) -> str:
     
 
 
-
+# Randomly fill (0, 1, 2, 3) within length
 def filler_function(num: int) -> str:
     """
     Create string of base4 number, which length is input.
@@ -236,9 +236,10 @@ def filler_function(num: int) -> str:
     forbidden = ["1001", "1021", "1101", "1200"]
 
 
+    # Filling
     for i in range(num):
 
-
+        # Detect forbidden codon
         while forbidden[0] in filler or forbidden[1] in filler \
             or forbidden[2] in filler or forbidden[3] in filler:
 
@@ -258,6 +259,8 @@ def filler_function(num: int) -> str:
 
 ### Encrypting Process
 
+
+# Encrypt and add star
 def completeter(username: str, password: str) -> tuple[str, str]:
     """
     Complete encoded username and password with start, stop and type codon.
@@ -278,7 +281,7 @@ def completeter(username: str, password: str) -> tuple[str, str]:
 
 
 
-
+# Username and password to base4
 def encrypter(username: str, password: str) -> str:
     """
     Make encrypted string in base4 (length = 256) 
@@ -302,16 +305,17 @@ def encrypter(username: str, password: str) -> str:
     username_lenght = len(username2)
     password_lenght = len(password2)
 
+    # Random starting position
     start_username = random.randint(0, max_length - username_lenght)
     start_password = random.randint(0, max_length - password_lenght)
 
-
+    # Check is not intersect
     while not (start_username + username_lenght <= start_password\
             or start_password + password_lenght <= start_password):
 
             start_password = random.randint(0, max_length - password_lenght)
 
-
+    # Find stoping position
     stop_username = start_username + username_lenght - 1
     stop_password = start_password + password_lenght - 1
 
@@ -338,7 +342,7 @@ def encrypter(username: str, password: str) -> str:
 
 
 
-
+# Base4 to user/password
 def decrypter(encrypted: str) -> tuple[str, str]:
     """
     Inverse of encrypter()
@@ -377,7 +381,7 @@ def decrypter(encrypted: str) -> tuple[str, str]:
 
 
 
-
+# base4 to ATCG
 def encrypter_translation(encrypted: str) -> str:
     """
     Randomly select Pattern and format input to that pattern.
@@ -393,8 +397,10 @@ def encrypter_translation(encrypted: str) -> str:
 
     encrypted_translated = encrypted
 
+    # Random key
     seed_key = random.randint(0, 23)
 
+    # Pair each character and translate
     encrypted_translated = encrypted_translated.replace("0", Patern[seed_key][0])
     encrypted_translated = encrypted_translated.replace("1", Patern[seed_key][1])
     encrypted_translated = encrypted_translated.replace("2", Patern[seed_key][2])
@@ -406,7 +412,7 @@ def encrypter_translation(encrypted: str) -> str:
 
 
 
-
+# ATCG to base4
 def decrypter_translation(encrypted: str) -> str:
     """
     Inverse of encrypter_translation()
@@ -420,17 +426,20 @@ def decrypter_translation(encrypted: str) -> str:
 
     """
     if encrypted == None:
-        return None
+        return None                             # Handle Error from decypter()
 
     key_string = encrypted[:12]
 
     if key_string not in Key:
-        return None
+        return None                             # Handle Error from invalide key
 
+
+    # Find Key
     seed_key = Key.index(key_string)
 
     translated = encrypted[12:]
     
+    # Assign Key then translate
     basic_A = str(Patern[seed_key].index("A"))
     basic_T = str(Patern[seed_key].index("T"))
     basic_C = str(Patern[seed_key].index("C"))
@@ -448,8 +457,12 @@ def decrypter_translation(encrypted: str) -> str:
 
 
 
-### Interfaces
+### Interfaces Function
 
+
+
+
+# Register Profile (Encrypting)
 def add_profile() -> tuple[str, str, str]:
     """
     Require user inputs username, password and usernote.
@@ -463,14 +476,15 @@ def add_profile() -> tuple[str, str, str]:
         username (str) - username
         password (str) - password
         usernote (str) - usernote
+    ro  None - error occur
     """
 
-
+    # Error Detector Unit
     is_blank = False
     is_surpass = False
     is_invalid = False
 
-
+    # Clear Screen
     os.system('cls' if os.name == 'nt' else 'clear')
 
     print("""
@@ -484,7 +498,9 @@ Maximum character length is 16 for Username and Password.
     usernote = input("Usernote : ")
     # input("Enter to continue.")
     print()
+    
 
+    # Error Detector Unit
     if len(username) == 0 or len(password) == 0:
         is_blank = True
     
@@ -500,11 +516,11 @@ Maximum character length is 16 for Username and Password.
         if character not in char_valid:
             is_invalid = True
 
-
-
+    # Return
     if not (is_blank or is_surpass or is_invalid):
         return username, password, usernote
     
+    # Error Report
     else:
         print("-------------------------------------")
         if is_blank:
@@ -522,7 +538,7 @@ Maximum character length is 16 for Username and Password.
 
 
 
-
+# Delete Profile
 def del_profile(max_index: int):
     """
     Recive user delete index.
@@ -537,19 +553,21 @@ def del_profile(max_index: int):
     """
 
     print("Delete Profile")
-
+    # Input
     selected_index = input("Select index: ")
-    # input("Enter to continue.")
     print()
 
+    # Error Blank
     if selected_index == "":
         print("Error: Blank.")
         input("Enter to continue.")
         return None
 
-    elif int(selected_index) in list(range(0, max_index)):
+    # Return
+    if int(selected_index) in list(range(0, max_index)):
         return int(selected_index)
 
+    # Error Index out of range.
     else:
         print("Error: Index out of range.")
         input("Enter to continue.")
@@ -557,7 +575,7 @@ def del_profile(max_index: int):
     
 
 
-
+# Read Profile Data (Decrypting)
 def red_profile(max_index: int):
     """
     Recive user read index.
@@ -570,21 +588,23 @@ def red_profile(max_index: int):
     or  None - when error occur.
 
     """
-
+    # Input
     print("Read Encrypted Code")
 
     selected_index = input("Select index: ")
-    # input("Enter to continue.")
     print()
 
+    # Error Blank
     if selected_index == "":
         print("Error: Blank.")
         input("Enter to continue.")
         return None
 
-    elif int(selected_index) in list(range(0, max_index)):
+    # Return
+    if int(selected_index) in list(range(0, max_index)):
         return int(selected_index)
 
+    # Error Index out of range
     else:
         print("Error: Index out of range.")
         input("Enter to continue.")
@@ -592,7 +612,7 @@ def red_profile(max_index: int):
 
 
 
-
+# Register Profile
 def reg_profile() -> tuple[str, str]:
     """
     Recive user encrypted code and register.
@@ -610,13 +630,14 @@ def reg_profile() -> tuple[str, str]:
 
 """)
 
+    # Input
     unregister_code = input("Unregistered Code : ")
     usernote = input("Usernote          : ")
-    # input("Enter to continue")
     print()
 
     username, password = decrypter(decrypter_translation(unregister_code))
 
+    # Errors
     if unregister_code == "":
         print("-------------------------------------")
         print("Error: Blank")
@@ -631,6 +652,7 @@ def reg_profile() -> tuple[str, str]:
         input("Enter to continue.")
         return None, None
 
+    # Return
     else:
         return unregister_code, usernote
 
@@ -643,7 +665,7 @@ def reg_profile() -> tuple[str, str]:
 
 
 
-
+### Interface Logic
 
 all_profile = []
 profile = []
@@ -654,6 +676,7 @@ while True:
 
 
 
+    # All Profile
     os.system('cls' if os.name == 'nt' else 'clear')
 
     print(f"All Profiles ({len(all_profile)})")
@@ -668,11 +691,13 @@ Note:
 
 """)
     
-
     print("""
 
 """)
 
+
+
+    # Console
     print("""
 Console Command:
           (0)   Add Profile
@@ -680,31 +705,32 @@ Console Command:
           (2)   Read Encrypted Code
           (3)   Register Encrypted Code
 """)
-    
     console = input("Console : ")
 
 
 
-
+    # Add Profile
     if console == "0":
         username, password, usernote = add_profile()
 
+        # Not Error Check
         if username != None and password != None:
-            profile = [encrypter_translation(encrypter(username, password)), usernote]
+            profile = [encrypter_translation(encrypter(username, password)),\
+                       usernote]
             all_profile.append(profile)
 
         profile = []
 
 
 
-
+    # Del Profile
     elif console == "1":
         print("""
 
 """)
         index = del_profile(len(all_profile))
 
-        if index != None:
+        if index != None:                                   # Not Error
             if index == 0 and len(all_profile) == 1:
                 all_profile = []
             else:
@@ -712,25 +738,31 @@ Console Command:
 
 
 
-
+    # Read Profile
     elif console == "2":
         print("""
 
 """)
+        
+        # No Profile
         if len(all_profile) == 0:
             print()
             print("Error: No profile")
             input("Enter to continue.")
             continue
         
+
+
         index = red_profile(len(all_profile))
 
-        if index != None:
-            username, password = decrypter(decrypter_translation(all_profile[index][0]))
+        if index != None:                                           # Not Error
+            username, password = decrypter(decrypter_translation(\
+                                 all_profile[index][0])) 
 
 
             os.system('cls' if os.name == 'nt' else 'clear')
 
+            # Print
             print(f"Read Profile #{index}")
             print(f"""
 Profile #{index}:
@@ -747,15 +779,17 @@ Password:   {password}
         
 
     
-
+    # Add Unregister Profile
     elif console == "3":
         unregister_code, usernote = reg_profile()
 
-        if not (unregister_code == None or usernote == None):
+        if not (unregister_code == None or usernote == None):   # Not Error
             profile = [unregister_code, usernote]
             all_profile.append(profile)
 
 
+
+    # Error Invalid Comman
     else:
         print()
         print("Error: Invalid Command.")
