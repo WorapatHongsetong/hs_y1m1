@@ -101,6 +101,10 @@ Key = ('ATCCCAGGGGGG',
 
 
 
+
+
+### Basic Function
+
 def tobase4(num: int) -> str:
     """
     Convert base10 integer to 4 digit base4 string.
@@ -249,6 +253,10 @@ def filler_function(num: int) -> str:
 
 
 
+
+
+
+### Encrypting Process
 
 def completeter(username: str, password: str) -> tuple[str, str]:
     """
@@ -438,6 +446,10 @@ def decrypter_translation(encrypted: str) -> str:
 
 
 
+
+
+### Interfaces
+
 def add_profile() -> tuple[str, str, str]:
     """
     Require user inputs username, password and usernote.
@@ -454,59 +466,60 @@ def add_profile() -> tuple[str, str, str]:
     """
 
 
-    while True:
-
-        is_blank = False
-        is_surpass = False
-        is_invalid = False
+    is_blank = False
+    is_surpass = False
+    is_invalid = False
 
 
-        os.system('cls' if os.name == 'nt' else 'clear')
+    os.system('cls' if os.name == 'nt' else 'clear')
 
-        print("""
+    print("""
 Add new profile
 
 Only Upper/Lowercase, Base10 Integer, "." and "@" for Username and Password.
 Maximum character length is 16 for Username and Password.
 """)
-        username = input("Username : ")
-        password = input("Password : ")
-        usernote = input("Usernote : ")
-        input("Enter to continue.")
+    username = input("Username : ")
+    password = input("Password : ")
+    usernote = input("Usernote : ")
+    # input("Enter to continue.")
+    print()
+
+    if len(username) == 0 or len(password) == 0:
+        is_blank = True
+    
+    if len(username) > 16 or len(password) > 16:
+        is_surpass = True
+
+    for character in username:
+        if character not in char_valid:
+            is_invalid = True
+
+
+    for character in password:
+        if character not in char_valid:
+            is_invalid = True
+
+
+
+    if not (is_blank or is_surpass or is_invalid):
+        return username, password, usernote
+    
+    else:
+        print("-------------------------------------")
+        if is_blank:
+            print("Error: Blank")
+        if is_surpass:
+            print("Error: Surpass 16 characters")
+        if is_invalid:
+            print("Error: Invalid character(s)")
+        
         print()
 
-        if len(username) == 0 or len(password) == 0:
-            is_blank = True
+        input("Enter to continue.")
         
-        if len(username) > 16 or len(password) > 16:
-            is_surpass = True
+        return None, None, None
 
-        for character in username:
-            if character not in char_valid:
-                is_invalid = True
-                break
-
-        for character in password:
-            if character not in char_valid:
-                is_invalid = True
-                break
-
-
-        if not (is_blank or is_surpass or is_invalid):
-            return username, password, usernote
-        
-        else:
-            print("-------------------------------------")
-            if is_blank:
-                print("Error: Blank")
-            if is_surpass:
-                print("Error: Surpass 16 characters")
-            if is_invalid:
-                print("Error: Invalid character(s)")
-            
-            print()
-
-            input("Enter to continue.")
 
 
 
@@ -526,7 +539,7 @@ def del_profile(max_index: int):
     print("Delete Profile")
 
     selected_index = input("Select index: ")
-    input("Enter to continue.")
+    # input("Enter to continue.")
     print()
 
     if selected_index == "":
@@ -561,7 +574,7 @@ def red_profile(max_index: int):
     print("Read Encrypted Code")
 
     selected_index = input("Select index: ")
-    input("Enter to continue.")
+    # input("Enter to continue.")
     print()
 
     if selected_index == "":
@@ -576,6 +589,7 @@ def red_profile(max_index: int):
         print("Error: Index out of range.")
         input("Enter to continue.")
         return None
+
 
 
 
@@ -598,7 +612,7 @@ def reg_profile() -> tuple[str, str]:
 
     unregister_code = input("Unregistered Code : ")
     usernote = input("Usernote          : ")
-    input("Enter to continue")
+    # input("Enter to continue")
     print()
 
     username, password = decrypter(decrypter_translation(unregister_code))
@@ -675,8 +689,11 @@ Console Command:
     if console == "0":
         username, password, usernote = add_profile()
 
-        profile = [encrypter_translation(encrypter(username, password)), usernote]
-        all_profile.append(profile)
+        if username != None and password != None:
+            profile = [encrypter_translation(encrypter(username, password)), usernote]
+            all_profile.append(profile)
+
+        profile = []
 
 
 
